@@ -14,6 +14,21 @@ struct ContentView: View {
     
     //View and logical related Functions------------------------------------
     
+    //Updates Coins
+    func updateCoins(amount: Int, operation: String) {
+        
+        if operation == "add" {
+            
+            coins += amount
+            
+        } else {
+            
+            coins -= amount
+            
+        }
+        UserDefaults.standard.set(coins, forKey: "Coins")
+        
+    }
     
     //Plays Music
     func playMusic() {
@@ -57,12 +72,43 @@ struct ContentView: View {
         }
     }
     
+    //Finds active item for edit screen
+    func active(name: String, active: String) -> Bool {
+        
+        if name == active {
+            
+            return true
+            
+        } else {
+            
+            return false
+            
+        }
+        
+    }
+    
+    //Update Table Buys
+    func updateBuyTable(table: String) {
+        
+        buyTable.append(table)
+        UserDefaults.standard.set(buyTable ,forKey: "bTable")
+        
+    }
+    
     //Update table
     func updateTable(tableC: String) {
         
         UserDefaults.standard.set(tableC ,forKey: "background")
         backgroundImage = tableC
 
+        
+    }
+    
+    //Update Deck Buys
+    func updateBuyDeck(deck: String) {
+        
+        buyDeck.append(deck)
+        UserDefaults.standard.set(buyDeck ,forKey: "bDeck")
         
     }
     
@@ -76,8 +122,18 @@ struct ContentView: View {
     
     //Pressed
     func isPressed() {
+        
         pressed.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            pressed.toggle()
+        }
+        
+    }
+    
+    //Pressed (Faster)
+    func isPressedFast() {
+        pressed.toggle()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             pressed.toggle()
         }
         
@@ -109,6 +165,7 @@ struct ContentView: View {
             
             if allCards.count == 0 {
                 updateHighscore()
+                updateCoins(amount: score, operation: "add")
                 playScreen = false
                 endScreen = true
 
@@ -128,6 +185,7 @@ struct ContentView: View {
     
     //Clears Cards from screen when wrong
     func clearCards() {
+        
         card1 = cardBack
         card2 = cardBack
         card3 = cardBack
@@ -416,15 +474,21 @@ struct ContentView: View {
     @State var audioFlip: AVAudioPlayer!
     @State var music: AVAudioPlayer!
     
-    //Highscore Saved Data
-    @State var highscore: Int = UserDefaults.standard.integer(forKey: "Highscore")
+    //Highscore and coins
+    @State var highscore: Int = UserDefaults.standard.integer(forKey: "Highscore") ?? 0
+    
+    @State var coins: Int = UserDefaults.standard.integer(forKey: "Coins") ?? 0
     
     //Lists
     @State var allCards: [String] = ["2C", "2D", "2S", "2H", "3C", "3D", "3S", "3H", "4C", "4D", "4S", "4H", "5C", "5D", "5S", "5H", "6C", "6D", "6S", "6H", "7C", "7D", "7S", "7H", "8C", "8D", "8S", "8H", "9C", "9D", "9S", "9H", "10C", "10D", "10S", "10H", "11C", "11D", "11S", "11H", "12C", "12D", "12S", "12H", "13C", "13D", "13S", "13H", "14C", "14D", "14S", "14H"]
 
     @State var backgroundColors: [String] = ["backgroundGreen", "backgroundBlack", "backgroundBlue", "backgroundRed", "backgroundGray", "backgroundPink", "backgroundWhite", "backgroundPurple"]
     
-    @State var deckColors: [String] = ["cardBackRB" , "cardBackBlack", "cardBackRed", "cardBackGray", "cardBackBlue", "cardBackPurple", "cardBackGreen", "cardBackOrange"]
+    @State var deckColors: [String] = ["cardBackRB" , "cardBackOrange", "cardBackGreen", "cardBackGray", "cardBackBlue", "cardBackPurple", "cardBackRed", "cardBackBlack"]
+    
+    @State var buyDeck: [String] = UserDefaults.standard.stringArray(forKey: "bDeck") ?? ["cardBackRB"]
+    
+    @State var buyTable: [String] = UserDefaults.standard.stringArray(forKey: "bTable") ?? ["backgroundGreen"]
     
     //View
     var body: some View {
@@ -440,6 +504,45 @@ struct ContentView: View {
             if titleScreen{
                 
                 VStack{
+                    
+                    //Coins and Make
+                    HStack{
+                        
+                        
+                        //Coins
+                        HStack {
+                            Image("coin")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                            
+                            
+                            Text(String(coins))
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.white)
+                        }
+                        .padding()
+                        
+                        Spacer()
+                        
+                        //Make
+                        ZStack{
+                            
+                            Image("Button1")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 100)
+                            
+                            Text("SHAZZZ")
+                                .font(.title2)
+                                .fontWeight(.thin)
+                                .foregroundColor(Color.white)
+                                .padding()
+                            
+                        }
+                        
+                    }
                     
                     Spacer()
                     
@@ -488,7 +591,19 @@ struct ContentView: View {
                         Spacer()
                         
                         //Customize Button
+                        Button(action: {
+                            titleScreen = false
+                            editScreen = true
+                        }, label: {
+                            Image("customButton")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.white)
+                                .frame(width: 50)
+                            
+                        })
                         
+                        Spacer()
                         
                         //Settings Button
                         Button(action: {
@@ -513,7 +628,8 @@ struct ContentView: View {
                         
                         Spacer()
                     }
-                    
+                    .padding()
+                    Spacer()
                     Spacer()
                     
                 }
@@ -537,16 +653,9 @@ struct ContentView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 40)
                                 .padding()
-                                .padding()
                             
                         })
-                        
-                        //Text
-                        Text("How To Play:")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.white)
-                        
+                       
                         Spacer()
                         
                     }
@@ -652,8 +761,313 @@ struct ContentView: View {
                 
             }
             
-            //In App Purchases for scheme changes
-            // if editScreen
+            //Scheme Change
+            if editScreen {
+                
+                VStack{
+                    
+                    HStack{
+
+                        //Back Button
+                        Button(action: {
+                            editScreen = false
+                            titleScreen = true
+                        }, label: {
+                            Image("backButton")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 40)
+                                .padding()
+                            
+                        })
+                        
+                        Spacer()
+                        
+                        //Coins
+                        HStack {
+                            Image("coin")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                            Text(String(coins))
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.white)
+                        }
+                        .padding(10)
+                    }
+                    
+                    //Scroll View for Decks
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        
+                        Spacer()
+                        
+                        HStack{
+                            
+                            Spacer()
+                            
+                            VStack {
+                                
+                                Text("D")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("E")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("C")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("K")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("S")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                            }
+                            
+                            //Decks
+                            ForEach(deckColors.indices, id: \.self) { i in
+                                
+                                VStack {
+                                    
+                                    Image(deckColors[i])
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(maxHeight: 225)
+                                        .padding(5)
+                                    
+                                    let act = active(name: deckColors[i], active: cardBack)
+                                    
+                                    if act {
+                                        
+                                        Image("checkedButton")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(maxHeight: 60)
+                                            .padding(5)
+                                        
+                                    } else if !act && buyDeck.contains(deckColors[i]){
+                                        
+                                        Button {
+                                            
+                                            updateDeck(deckC: deckColors[i])
+
+                                            
+                                        } label: {
+                                            
+                                            Image("emptyButton")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(maxHeight: 60)
+                                                .padding(5)
+                                            
+                                        }
+                                        
+                                    } else {
+                                        
+                                        Button {
+                                            
+                                            if coins >= 150*(i+1) {
+                                                
+                                                updateCoins(amount: 150*(i+1), operation: "sub")
+                                                
+                                                updateBuyDeck(deck: deckColors[i])
+                                                
+                                            }
+                                            
+                                            
+                                        } label: {
+                                            
+                                            ZStack {
+                                                
+                                                Image("Button1")
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .frame(maxHeight: 40)
+                                                    .padding(5)
+                                                
+                                                HStack{
+                                                    
+                                                    Image("coin")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(maxHeight: 20)
+                                                        .padding(1)
+                                                    
+                                                    Text(String(150*(i+1)))
+                                                        .font(.title2)
+                                                        .fontWeight(.bold)
+                                                        .foregroundColor(Color.white)
+                                                        .padding(1)
+                                                        
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+
+                                        
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    //Scroll View for Tables
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        
+                        Spacer()
+                        
+                        HStack{
+                            
+                            Spacer()
+                            
+                            VStack {
+                                
+                                Text("T")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("A")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("B")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("L")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("E")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                                Text("S")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(1)
+                            }
+                            
+                            ForEach(backgroundColors.indices, id: \.self) { i in
+                                
+                                VStack {
+                                    
+                                    Image(backgroundColors[i])
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(maxHeight: 200)
+                                        .border(Color.black, width: 3)
+                                        .padding(5)
+                                    
+                                    let act = active(name: backgroundColors[i], active: backgroundImage)
+                                    
+                                    if act {
+                                        
+                                        Image("checkedButton")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(maxHeight: 60)
+                                            .padding(5)
+                                        
+                                    } else if !act && buyTable.contains(backgroundColors[i]){
+                                        
+                                        Button {
+                                            
+                                            updateTable(tableC: backgroundColors[i])
+
+                                            
+                                        } label: {
+                                            
+                                            Image("emptyButton")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(maxHeight: 60)
+                                                .padding(5)
+                                            
+                                        }
+                                        
+                                    } else {
+                                        
+                                        Button {
+                                            
+                                            if coins >= 250 {
+                                                
+                                                updateCoins(amount: 250, operation: "sub")
+                                                
+                                                updateBuyTable(table: backgroundColors[i])
+                                                
+                                            }
+                                            
+                                            
+                                        } label: {
+                                            
+                                            ZStack {
+                                                
+                                                Image("Button1")
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .frame(maxHeight: 40)
+                                                    .padding(5)
+                                                
+                                                HStack{
+                                                    
+                                                    Image("coin")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(maxHeight: 20)
+                                                        .padding(1)
+                                                    
+                                                    Text(String(250))
+                                                        .font(.title2)
+                                                        .fontWeight(.bold)
+                                                        .foregroundColor(Color.white)
+                                                        .padding(1)
+                                                        
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+
+                                        
+                                    }
+                                    
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    
+                }
+                
+            }
             
             //Toggle SFX and Music
             if settingScreen{
@@ -675,12 +1089,6 @@ struct ContentView: View {
                                 
                             
                         })
-                        
-                        //Text
-                        Text(" Adjust Settings:")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.white)
                         
                         Spacer()
                         
@@ -845,6 +1253,7 @@ struct ContentView: View {
                         Spacer()
                         
                         //Back Button
+                        
                         Button(action: {
                             restartGame()
                             playScreen = false
@@ -860,49 +1269,28 @@ struct ContentView: View {
                         Spacer()
                         
                         //Restart
-                        
-                        if !pressed{
+                        ZStack{
+                            Image("Button1")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(5.0)
+                                .frame(maxWidth: 150)
+                            
                             
                             Button(action: {
-                                isPressed()
-                                restartGame()
-                            }, label: {
-                                ZStack{
-                                    
-                                    Image("Button1")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .cornerRadius(5.0)
-                                        .frame(maxWidth: 150)
-                                    
-                                    Text("RESTART")
-                                        .font(.title2)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Color.white)
-                                    
+                                if !pressed{
+                                    restartGame()
+                                    isPressed()
                                 }
-                                
-                                
-                            })
-                            
-                        } else {
-                            
-                            ZStack{
-                                
-                                Image("Button1")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .cornerRadius(5.0)
-                                    .frame(maxWidth: 150)
-                                
+                            }, label: {
                                 Text("RESTART")
                                     .font(.title2)
                                     .fontWeight(.bold)
                                     .foregroundColor(Color.white)
                                 
-                            }
-                            
+                            })
                         }
+                        
                         
                         Spacer()
                         
@@ -1527,106 +1915,140 @@ struct ContentView: View {
             //End Screen
             if endScreen{
                 
-                ZStack{
+                VStack {
                     
-                    Image("Button1")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
+                    HStack{
+                        
+                        //Coins
+                        HStack {
+                            Image("coin")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                            
+                            
+                            Text(String(coins))
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.white)
+                        }
                         .padding()
-                        .frame(maxWidth: 325, maxHeight: 325)
-                    
-                    VStack{
                         
                         Spacer()
                         
-                        HStack{
-                            
-                            Spacer()
-                            
-                            //Score
-                            VStack{
-                                
-                                Text("Your Score")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.white)
-                                
-                                Text(String(score))
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.white)
-                                
-                            }
-                            
-                            Spacer()
-                            
-                            //Highscore
-                            VStack{
-                                
-                                Text("Highscore")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.white)
-                                
-                                Text(String(highscore))
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.white)
-                                
-                            }
-                            
-                            Spacer()
-                            
-                        }
+                        //Make
+                        Text("SHAZZZ")
+                            .font(.title2)
+                            .fontWeight(.thin)
+                            .foregroundColor(Color.white)
+                            .padding()
                         
-                        //Restart and Back Button
+                    }
+                    
+                    ZStack{
                         
-                        HStack{
+                        Image("Button1")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .padding()
+                            .frame(maxWidth: 325, maxHeight: 325)
+                        
+                        VStack{
                             
                             Spacer()
                             
-                            //Back Button
-                            Button(action: {
-                                endScreen = false
-                                titleScreen = true
-                            }, label: {
-                                Image("backButton")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 50)
+                            HStack{
                                 
+                                Spacer()
                                 
-                            })
-                            
-                            Spacer()
-                            
-                            //Restart
-                            ZStack{
-                                
-                                Image("Button1")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .cornerRadius(5.0)
-                                    .frame(maxWidth: 200, maxHeight: 100)
-                                
-                                Button(action: {
-                                    restartGame()
-                                }, label: {
-                                    Text("PLAY AGAIN")
+                                //Score
+                                VStack{
+                                    
+                                    Text("Your Score")
                                         .font(.title)
                                         .fontWeight(.bold)
                                         .foregroundColor(Color.white)
                                     
-                                })
+                                    Text(String(score))
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
+                                    
+                                }
+                                
+                                Spacer()
+                                
+                                //Highscore
+                                VStack{
+                                    
+                                    Text("Highscore")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
+                                    
+                                    Text(String(highscore))
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
+                                    
+                                }
+                                
+                                Spacer()
                                 
                             }
                             
-                            Spacer()
+                            //Restart and Back Button
                             
+                            HStack{
+                                
+                                Spacer()
+                                
+                                //Back Button
+                                Button(action: {
+                                    endScreen = false
+                                    titleScreen = true
+                                }, label: {
+                                    Image("backButton")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 50)
+                                    
+                                    
+                                })
+                                
+                                Spacer()
+                                
+                                //Restart
+                                ZStack{
+                                    
+                                    Image("Button1")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .cornerRadius(5.0)
+                                        .frame(maxWidth: 200, maxHeight: 100)
+                                    
+                                    Button(action: {
+                                        restartGame()
+                                    }, label: {
+                                        Text("PLAY AGAIN")
+                                            .font(.title)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color.white)
+                                        
+                                    })
+                                    
+                                }
+                                
+                                Spacer()
+                                
+                            }
+                            Spacer()
                         }
-                        Spacer()
+                        
                     }
                     
+                    Spacer()
+                    Spacer()
                 }
                 
             }
