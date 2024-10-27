@@ -11,7 +11,6 @@ import AVFoundation
 //Struct View
 struct ContentView: View {
     
-    
     //View and logical related Functions------------------------------------
     
     //Updates Coins
@@ -19,7 +18,15 @@ struct ContentView: View {
         
         if operation == "add" {
             
-            coins += amount
+            if coins + amount > 9999 {
+                
+                coins = 9999
+                
+            } else {
+                
+                coins += amount
+                
+            }
             
         } else {
             
@@ -165,7 +172,6 @@ struct ContentView: View {
             
             if allCards.count == 0 {
                 updateHighscore()
-                updateCoins(amount: score, operation: "add")
                 playScreen = false
                 endScreen = true
 
@@ -177,6 +183,7 @@ struct ContentView: View {
     //Restarts Game
     func restartGame() {
         allCards = ["2C", "2D", "2S", "2H", "3C", "3D", "3S", "3H", "4C", "4D", "4S", "4H", "5C", "5D", "5S", "5H", "6C", "6D", "6S", "6H", "7C", "7D", "7S", "7H", "8C", "8D", "8S", "8H", "9C", "9D", "9S", "9H", "10C", "10D", "10S", "10H", "11C", "11D", "11S", "11H", "12C", "12D", "12S", "12H", "13C", "13D", "13S", "13H", "14C", "14D", "14S", "14H"]
+        updateCoins(amount: score, operation: "add")
         score = 0
         clearCards()
         endScreen = false
@@ -505,9 +512,10 @@ struct ContentView: View {
                 
                 VStack{
                     
-                    //Coins and Make
+                    //Coins highscore and  Make
                     HStack{
                         
+                        Spacer()
                         
                         //Coins
                         HStack {
@@ -516,32 +524,65 @@ struct ContentView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 30, height: 30)
                             
-                            
                             Text(String(coins))
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(Color.white)
                         }
-                        .padding()
+                        .padding(.trailing, 10)
+                        
                         
                         Spacer()
                         
-                        //Make
-                        ZStack{
+                        HStack {
                             
-                            Image("Button1")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 100)
+                            Spacer()
                             
-                            Text("SHAZZZ")
-                                .font(.title2)
-                                .fontWeight(.thin)
-                                .foregroundColor(Color.white)
-                                .padding()
+                            //Highscore
+                            ZStack{
+                                
+                                Image("Button1")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 125)
+                                    .border(Color.black, width: 3)
+                                
+                                HStack{
+                                    
+                                    Text("Highscore: ")
+                                        .font(.footnote)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
+                                    
+                                    Text(String(highscore))
+                                        .font(.footnote)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
+                                    
+                                }
+                                
+                            }
+                            
+                            Spacer()
+                            
+                            //Make
+                            ZStack{
+                                
+                                Image("Button1")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 100)
+                                    .border(Color.black, width: 2)
+                                
+                                Text("SHAZZZ")
+                                    .font(.title2)
+                                    .fontWeight(.thin)
+                                    .foregroundColor(Color.white)
+                                
+                            }
                             
                         }
-                        
+                        Spacer()
                     }
                     
                     Spacer()
@@ -630,7 +671,6 @@ struct ContentView: View {
                     }
                     .padding()
                     Spacer()
-                    Spacer()
                     
                 }
                 
@@ -676,7 +716,7 @@ struct ContentView: View {
                                 .frame(maxWidth: 125)
                                 .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
                             
-                            Text("1. Guess The Color")
+                            Text("1. Guess The Color\n")
                                 .font(.headline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
@@ -694,10 +734,11 @@ struct ContentView: View {
                                 .frame(maxWidth: 125)
                                 .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
                             
-                            Text("2. High or Lower")
+                            Text("2. Higher or Lower than card 1")
                                 .font(.headline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
                                 
                             
                         }
@@ -724,10 +765,11 @@ struct ContentView: View {
                                 .frame(maxWidth: 125)
                                 .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
                             
-                            Text("3. In or Out")
+                            Text("3. In Between or Outside of card 1 and 2")
                                 .font(.headline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
                                 
                             
                         }
@@ -742,7 +784,7 @@ struct ContentView: View {
                                 .frame(maxWidth: 125)
                                 .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
                             
-                            Text("4. Guess the Suit")
+                            Text("4. Guess the Suit\n")
                                 .font(.headline)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
@@ -785,14 +827,14 @@ struct ContentView: View {
                         
                         //Coins
                         HStack {
-                            Image("coin")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 30, height: 30)
                             Text(String(coins))
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(Color.white)
+                            Image("coin")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
                         }
                         .padding(10)
                     }
@@ -893,6 +935,7 @@ struct ContentView: View {
                                                 Image("Button1")
                                                     .resizable()
                                                     .aspectRatio(contentMode: .fit)
+                                                    .border(Color.black, width: 2)
                                                     .frame(maxHeight: 40)
                                                     .padding(5)
                                                 
@@ -1028,6 +1071,7 @@ struct ContentView: View {
                                                 Image("Button1")
                                                     .resizable()
                                                     .aspectRatio(contentMode: .fit)
+                                                    .border(Color.black, width: 2)
                                                     .frame(maxHeight: 40)
                                                     .padding(5)
                                                 
@@ -1273,6 +1317,7 @@ struct ContentView: View {
                             Image("Button1")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
+                                .border(Color.black, width: 2)
                                 .cornerRadius(5.0)
                                 .frame(maxWidth: 150)
                             
@@ -1420,6 +1465,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 150, height: 60)
                                             
@@ -1435,6 +1481,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 150, height: 60)
                                         
@@ -1455,6 +1502,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 150, height: 60)
                                             
@@ -1470,6 +1518,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 150, height: 60)
                                         
@@ -1513,6 +1562,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 150, height: 60)
                                             
@@ -1528,6 +1578,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 150, height: 60)
                                         
@@ -1548,6 +1599,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 150, height: 60)
                                             
@@ -1563,6 +1615,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 150, height: 60)
                                         
@@ -1585,6 +1638,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 125,height: 50.0)
                                         
@@ -1600,6 +1654,7 @@ struct ContentView: View {
                                     Image("Button1")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
+                                        .border(Color.black, width: 2)
                                         .cornerRadius(5.0)
                                         .frame(width: 125,height: 50.0)
                                     
@@ -1632,6 +1687,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 150, height: 60)
                                             
@@ -1646,6 +1702,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 150, height: 60)
                                         
@@ -1666,6 +1723,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 150, height: 60)
                                             
@@ -1681,6 +1739,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 150, height: 60)
                                         
@@ -1703,6 +1762,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 125.0,height: 50.0)
                                         
@@ -1717,6 +1777,7 @@ struct ContentView: View {
                                     Image("Button1")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
+                                        .border(Color.black, width: 2)
                                         .cornerRadius(5.0)
                                         .frame(width: 125.0,height: 50.0)
                                     
@@ -1749,6 +1810,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 140, height: 60)
                                             
@@ -1763,6 +1825,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 140, height: 60)
                                         
@@ -1783,6 +1846,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 140, height: 60)
                                             
@@ -1798,6 +1862,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 140, height: 60)
                                         
@@ -1824,6 +1889,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 140, height: 60)
                                             
@@ -1839,6 +1905,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 140, height: 60)
                                         
@@ -1859,6 +1926,7 @@ struct ContentView: View {
                                             Image("Button1")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
+                                                .border(Color.black, width: 2)
                                                 .cornerRadius(5.0)
                                                 .frame(width: 140, height: 60)
                                             
@@ -1874,6 +1942,7 @@ struct ContentView: View {
                                         Image("Button1")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
+                                            .border(Color.black, width: 2)
                                             .cornerRadius(5.0)
                                             .frame(width: 140, height: 60)
                                         
@@ -1937,11 +2006,21 @@ struct ContentView: View {
                         Spacer()
                         
                         //Make
-                        Text("SHAZZZ")
-                            .font(.title2)
-                            .fontWeight(.thin)
-                            .foregroundColor(Color.white)
-                            .padding()
+                        ZStack{
+                            
+                            Image("Button1")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 100)
+                                .border(Color.black, width: 2)
+                            
+                            Text("SHAZZZ")
+                                .font(.title2)
+                                .fontWeight(.thin)
+                                .foregroundColor(Color.white)
+                                .padding()
+                            
+                        }
                         
                     }
                     
