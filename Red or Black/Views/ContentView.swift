@@ -703,100 +703,41 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    
-                    //Examples
-                    HStack{
+                    //Text
+                    VStack(alignment: .leading){
                         
-                        Spacer()
+                        Text("1. Guess if the color is going to be Red or Black")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                            .padding()
                         
-                        VStack{
-                            
-                            Image("Sample1")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: 125)
-                                .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
-                            
-                            Text("1. Guess The Color\n")
-                                .font(.headline)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                
-                            
-                        }
+                        Text("2. Guess if the second card is Over(higher) or Under(lower) than the 1st card")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                            .padding()
                         
-                        Spacer()
+                        Text("3. Guess if the third card is In(between) or Out(side) of the Previous 2 cards")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                            .padding()
                         
-                        VStack{
-                            
-                            Image("Sample2")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: 125)
-                                .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
-                            
-                            Text("2. Higher or Lower than card 1")
-                                .font(.headline)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                .multilineTextAlignment(.center)
-                                
-                            
-                        }
+                        Text("4. Guess the suit of the Final card")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                            .padding()
                         
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        
+                        Text("* Repeat until you go through an entire deck(52 cards)")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                            .padding()
                     }
                     
                     Spacer()
-                    
-                    HStack{
-                        
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        
-                        VStack{
-                            
-                            Image("Sample3")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: 125)
-                                .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
-                            
-                            Text("3. In Between or Outside of card 1 and 2")
-                                .font(.headline)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                .multilineTextAlignment(.center)
-                                
-                            
-                        }
-                        
-                        Spacer()
-                        
-                        VStack{
-                            
-                            Image("Sample4")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: 125)
-                                .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 3)
-                            
-                            Text("4. Guess the Suit\n")
-                                .font(.headline)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            
-                            
-                        }
-                    
-                        Spacer()
-                        
-                    }
-                    
                     Spacer()
                     
                 }
@@ -1144,6 +1085,7 @@ struct ContentView: View {
                         Image("Button1")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
+                            .border(Color.black, width: 8)
                             .padding()
                             .frame(maxWidth: 300, maxHeight: 300)
                         
@@ -1273,13 +1215,9 @@ struct ContentView: View {
                         
                     }
                     
-                    Text("Sneaking - Copyright Free Music ＆ SFX from https://yoyosound.com")
-                        .font(.title3)
-                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .padding()
+                    Spacer()
+                    Spacer()
+                    Spacer()
                     
                 }
                 
