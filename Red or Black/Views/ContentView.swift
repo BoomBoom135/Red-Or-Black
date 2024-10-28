@@ -171,6 +171,7 @@ struct ContentView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             
             if allCards.count == 0 {
+                restartGame()
                 updateHighscore()
                 playScreen = false
                 endScreen = true
@@ -2029,6 +2030,7 @@ struct ContentView: View {
                         Image("Button1")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
+                            .border(Color.black, width: 7)
                             .padding()
                             .frame(maxWidth: 325, maxHeight: 325)
                         
@@ -2077,7 +2079,6 @@ struct ContentView: View {
                             }
                             
                             //Restart and Back Button
-                            
                             HStack{
                                 
                                 Spacer()
@@ -2091,8 +2092,6 @@ struct ContentView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 50)
-                                    
-                                    
                                 })
                                 
                                 Spacer()
@@ -2103,6 +2102,7 @@ struct ContentView: View {
                                     Image("Button1")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
+                                        .border(Color.black, width: 3)
                                         .cornerRadius(5.0)
                                         .frame(maxWidth: 200, maxHeight: 100)
                                     
